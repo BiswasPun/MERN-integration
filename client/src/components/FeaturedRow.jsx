@@ -3,12 +3,16 @@ import { Link } from 'react-router-dom';
 import { ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react';
 import ProductCard from './ProductCard';
 
-export default function FeaturedRow({ products }) {
+const AUTOPLAY_MS = 4000;
+const FULL_WIDTH_AUTOPLAY_WINDOW_MS = 5000;
+
+export default function FeaturedRow({ products, fullWidth = false }) {
   const trackRef = useRef(null);
   const [cardSize, setCardSize] = useState(0);
   const [position, setPosition] = useState(0);
   const [noAnim, setNoAnim] = useState(false);
   const [paused, setPaused] = useState(false);
+  const [autoplayEnded, setAutoplayEnded] = useState(false);
   const touchStartX = useRef(null);
 
   const count = products?.length || 0;
@@ -25,7 +29,7 @@ export default function FeaturedRow({ products }) {
     const ro = new ResizeObserver(measure);
     ro.observe(el);
     return () => ro.disconnect();
-  }, [count]);
+  }, [count, fullWidth]);
 
   const go = useCallback((dir) => {
     if (count < 2) return;
@@ -50,10 +54,19 @@ export default function FeaturedRow({ products }) {
   }, [position, count]);
 
   useEffect(() => {
-    if (count < 2 || paused) return;
-    const id = setInterval(() => go(1), 4000);
+    if (!fullWidth) {
+      setAutoplayEnded(false);
+      return;
+    }
+    const id = setTimeout(() => setAutoplayEnded(true), FULL_WIDTH_AUTOPLAY_WINDOW_MS);
+    return () => clearTimeout(id);
+  }, [fullWidth]);
+
+  useEffect(() => {
+    if (count < 2 || paused || autoplayEnded) return;
+    const id = setInterval(() => go(1), AUTOPLAY_MS);
     return () => clearInterval(id);
-  }, [count, paused, go]);
+  }, [count, paused, autoplayEnded, go]);
 
   const handleTouchStart = (e) => {
     touchStartX.current = e.touches[0].clientX;
@@ -97,7 +110,7 @@ export default function FeaturedRow({ products }) {
             onMouseLeave={() => setPaused(false)}
             onTouchStart={handleTouchStart}
             onTouchEnd={handleTouchEnd}
-            className="flex gap-4 sm:gap-6 px-14 transition-transform duration-[250ms] ease-out motion-reduce:transition-none"
+            className={`flex ${fullWidth ? 'gap-0 px-0' : 'gap-4 sm:gap-6 px-14'} transition-transform duration-[250ms] ease-out motion-reduce:transition-none`}
             style={{
               transform: `translateX(${-position * cardSize}px)`,
               transition: noAnim ? 'none' : undefined,
@@ -110,9 +123,15 @@ export default function FeaturedRow({ products }) {
             {deck.map((product, i) => (
               <div
                 key={`${product._id}-${i >= count ? 'b' : 'a'}`}
-                className="w-[220px] sm:w-[260px] shrink-0"
+                className={fullWidth ? 'w-full shrink-0 flex justify-center' : 'w-[220px] sm:w-[260px] shrink-0'}
               >
-                <ProductCard product={product} index={i % count} />
+                {fullWidth ? (
+                  <div className="w-full max-w-[360px] sm:max-w-[420px]">
+                    <ProductCard product={product} index={i % count} />
+                  </div>
+                ) : (
+                  <ProductCard product={product} index={i % count} />
+                )}
               </div>
             ))}
           </div>
