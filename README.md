@@ -272,18 +272,3 @@ A few choices worth calling out:
 - **A demo seed, not the real catalog.** The public repo ships generic products so the app is runnable without exposing the business's actual designs or supplier data.
 
 More detail in [docs/CASE_STUDY.md](docs/CASE_STUDY.md).
-
-## License
-
-Source code is licensed under the [PolyForm Noncommercial License 1.0.0](LICENSE). You may read, study, and use it for noncommercial purposes. Commercial use, resale, or running a competing store with this code is not permitted.
-
-The Integration name, logo, product artwork, photography, and brand assets are **not** covered by the code license. See [TRADEMARK.md](TRADEMARK.md).
-
-## Author
-
-**Najmos Salahin**
-
-- GitHub: [@NajmosSalahin](https://github.com/NajmosSalahin)
-- Live store: [integration-06n2.onrender.com](https://integration-06n2.onrender.com)
-
-If you are reviewing this for a role, the [case study](docs/CASE_STUDY.md) covers the problem, the build, the trade-offs, and what I would do next.

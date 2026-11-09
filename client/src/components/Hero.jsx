@@ -6,7 +6,7 @@ const CLOUD_BASE = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME
   ? `https://res.cloudinary.com/${import.meta.env.VITE_CLOUDINARY_CLOUD_NAME}/image/upload`
   : 'https://res.cloudinary.com/zo1t9pye/image/upload';
 const BANNER_WIDTHS = [480, 900, 1600];
-const AUTOPLAY_MS = 4500;
+const AUTOPLAY_MS = 3500;
 const RESUME_AFTER_INTERACTION_MS = 5000;
 
 const FALLBACK_SLIDES = [
@@ -171,7 +171,7 @@ export default function Hero() {
                 e.currentTarget.onerror = null;
                 e.currentTarget.src = FALLBACK_IMAGE;
               }}
-              className={`absolute inset-0 w-full h-full object-cover transition-all duration-[600ms] ease-out ${
+              className={`absolute inset-0 w-full h-full object-cover transition-all duration-[500ms] ease-out ${
                 active
                   ? 'opacity-100 scale-[1.035] delay-[100ms]'
                   : 'opacity-0 scale-100 delay-0'
@@ -198,17 +198,17 @@ export default function Hero() {
 
       <button
         onClick={prev}
-        className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 z-20 w-[44px] h-[44px] flex items-center justify-center bg-black/50 hover:bg-black/70 text-white rounded-full transition-colors"
+        className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 z-20 w-[44px] h-[44px] flex items-center justify-center bg-black/50 hover:bg-[#1d4ed8] text-white rounded-full transition-colors"
         aria-label="Previous slide"
       >
-        <ChevronLeft size={22} aria-hidden="true" />
+        <ChevronLeft size={26} strokeWidth={2.5} aria-hidden="true" />
       </button>
       <button
         onClick={next}
-        className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 z-20 w-[44px] h-[44px] flex items-center justify-center bg-black/50 hover:bg-black/70 text-white rounded-full transition-colors"
+        className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 z-20 w-[44px] h-[44px] flex items-center justify-center bg-black/50 hover:bg-[#1d4ed8] text-white rounded-full transition-colors"
         aria-label="Next slide"
       >
-        <ChevronRight size={22} aria-hidden="true" />
+        <ChevronRight size={26} strokeWidth={2.5} aria-hidden="true" />
       </button>
 
       <div className="absolute bottom-6 right-6 z-20 flex items-center gap-2">
@@ -230,7 +230,7 @@ export default function Hero() {
                 {active && (
                   <span
                     key={tick}
-                    className="absolute inset-y-0 left-0 bg-white"
+                    className="absolute inset-y-0 left-0 bg-[#1d4ed8]"
                     style={{
                       width: '100%',
                       animation: `hero-progress ${AUTOPLAY_MS}ms linear forwards`,
