@@ -8,6 +8,7 @@ const CLOUD_BASE = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME
 const BANNER_WIDTHS = [480, 900, 1600];
 const AUTOPLAY_MS = 3500;
 const RESUME_AFTER_INTERACTION_MS = 5000;
+const AUTOPLAY_WINDOW_MS = 5000;
 
 const FALLBACK_SLIDES = [
   { publicId: '/demo/banner-1.svg', alt: 'New Collection', cta: '/shop', label: 'Shop New Collection' },
@@ -34,6 +35,7 @@ export default function Hero() {
   const [current, setCurrent] = useState(0);
   const [tick, setTick] = useState(0);
   const [paused, setPaused] = useState(false);
+  const [autoplayEnded, setAutoplayEnded] = useState(false);
   const touchStartX = useRef(null);
   const resumeTimerRef = useRef(null);
   const hoveringRef = useRef(false);
@@ -110,13 +112,18 @@ export default function Hero() {
   }, [pauseForInteraction]);
 
   useEffect(() => {
-    if (paused) return;
+    const timer = setTimeout(() => setAutoplayEnded(true), AUTOPLAY_WINDOW_MS);
+    return () => clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {
+    if (paused || autoplayEnded) return;
     const timer = setInterval(() => {
       setCurrent((p) => (p + 1) % slides.length);
       setTick((t) => t + 1);
     }, AUTOPLAY_MS);
     return () => clearInterval(timer);
-  }, [paused]);
+  }, [paused, autoplayEnded]);
 
   useEffect(() => {
     const handleVisibility = () => {
@@ -227,7 +234,7 @@ export default function Hero() {
                   active ? 'w-6' : 'w-4 opacity-55 hover:opacity-90'
                 }`}
               >
-                {active && (
+                {active && !autoplayEnded && (
                   <span
                     key={tick}
                     className="absolute inset-y-0 left-0 bg-[#1d4ed8]"
